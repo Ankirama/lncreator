@@ -1,0 +1,19 @@
+- Get chapters from [Novel Updates](https://www.novelupdates.com)
+- Allow to use our reading lists
+- Allow some research on Novelupdates
+- For every wordpress project try to find how is it structured
+  - Find where the text may be (where are the <p>?) and find their parent
+  - Find the chapter title
+  - Omit comments / useless text
+  - Add it in a db to improve the performances
+  - if <p> < 5 (for example) then check if the structure is the same as before and try to find any link with chapter name, examples:
+    - [Reincarnator c345-348](http://gravitytales.com/post/reincarnator/reincarnator-chapter-345-348)
+    - [Arifureta c234-235](https://bakapervert.wordpress.com/2017/04/12/arifureta-234-235-finished/)
+- Try to find volume and assemble chapters
+- Allow to create ebook from chapters range (like chapter 1 to 100)
+  - Limit max number
+  - Allow to name this ebook
+- Don't forget *skipped chapters* (like illustrations, extra, ...) on NovelUpdates - log them somewhere
+- Create a cli interface
+- Create a website
+- Add rss flux / notification from novelupdates => lncreator and lncreator => users
