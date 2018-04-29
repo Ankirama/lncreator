@@ -17,3 +17,7 @@
 - Create a cli interface
 - Create a website
 - Add rss flux / notification from novelupdates => lncreator and lncreator => users
+- In novelupdates check when we choose chapters if there is others extra chapters to add (like illustrations etc...)
+- Don't forget chapter 0 / introduction
+- Check duplicate chapters !!!!! (https://www.novelupdates.com/series/reincarnated-as-a-villager-strongest-slow-life/?pg=3)
+- Manage differents balises (like <p>, <em>, <img>, <table>, ...)
