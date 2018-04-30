@@ -99,10 +99,14 @@ class Release(object):
       return False
     parent_classes = []
     parent_id = ""
-    if "class" in parent_tag:
+    try:
       parent_classes = parent_tag["class"]
-    if "id" in parent_tag:
+    except KeyError:
+      parent_classes = []
+    try:
       parent_id = parent_tag["id"]
+    except KeyError:
+      parent_id = ""
     logger.debug("Parent found:")
     logger.debug("tag: %s" % parent_tag.name)
     logger.debug("classes: %s" % (" - ".join(parent_classes)))
