@@ -86,7 +86,7 @@ class Database(object):
     except sqlite3.OperationalError as e:
       logger.error("[Database]: Unable to execute select in [%s]: %s" % (query, e))
       return False
-    result = curosr.fetchall()
+    result = cursor.fetchall()
     return result
 
   def check_entry(self, query, data):
