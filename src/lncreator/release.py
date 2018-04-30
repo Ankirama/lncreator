@@ -70,7 +70,7 @@ class Release(object):
     logger.debug("Trying to get content position of [%s]" % self._url)
     if not p_tags:
       logger.error("Unable to find any <p> tags... Stopping here")
-      return False
+      return -1
     i = 0
     index = -1
     size = 0
@@ -140,7 +140,8 @@ class Release(object):
       return False
     p_tags = self._soup.find_all("p")
     index = self._find_release_content_position(p_tags)
-    if not index or index == -1:
+    if index == -1:
+      logger.error("Unable to find p_tags...")
       return False
     p_tag = p_tags[index]
     parent = self._get_parent_data(p_tag)
