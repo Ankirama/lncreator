@@ -8,7 +8,7 @@ class Release(object):
   _novelupdates_url = None
   _url = None
   _soup = None
-  _title = None
+  _name = None
   _group = None
   _tags = None
   _pseudo_content = None
@@ -26,7 +26,7 @@ class Release(object):
         logger.error(basic_data)
         raise TypeError("Your basic_data must contain [%s]" % key)
     self._group = {'name': basic_data["group"], 'url': basic_data['group_href']}
-    self._title = basic_data['title']
+    self._name = basic_data['title']
     self._novelupdates_url = basic_data['href']
 
   def _add_tag(self, tags, tag_to_add):
@@ -44,7 +44,7 @@ class Release(object):
     id_group = database.add_group(self._group)
     if not id_group:
       return False
-    id_release = database.add_release({'name': self._title, 'url': self._url, 'id_group': id_group, 'id_lightnovel': id_lightnovel})
+    id_release = database.add_release({'name': self._name, 'url': self._url, 'id_group': id_group, 'id_lightnovel': id_lightnovel})
     if not id_release:
       return False
     for key, value in self._tags.items():
