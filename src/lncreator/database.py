@@ -144,8 +144,6 @@ class Database(object):
     if not "id_group" in data:
       logger.error("[Database]: The key [%s] is missing in data" % "id_group")
       return False
-    if not self.select_entries(self.SELECT_GROUP_BY_ID, data):
-      logger.error("[Database]: Unable to find a group with id [%s]" % data['id_group'])
     return self.add_entry_with_check(self.INSERT_RELEASE, data ['name', 'url', 'id_group', 'id_lightnovel'])
 
   def add_lightnovel(self, data):
