@@ -42,7 +42,7 @@ class Database(object):
   SELECT_LIGHTNOVEL_BY_URL = "SELECT * FROM lightnovels WHERE url = :url;"
   SELECT_LIGHTNOVEL_BY_ID = "SELECT * FROM lightnovels WHERE id = :id;"
   INSERT_RELEASE = "INSERT INTO releases (name, url, id_group, id_lightnovel) VALUES (:name, :url, :id_group, :id_lightnovel);"
-  INSERT_GROUP = "INSERT INTO groups (:name, :url) VALUES(:name, :url);"
+  INSERT_GROUP = "INSERT INTO groups (name, url) VALUES(:name, :url);"
   INSERT_LIGHTNOVEL = "INSERT INTO lightnovels (name, url, releases_number, pages_number) VALUES (:name, :url, :releases_number, :pages_number);"
   INSERT_TAG = "INSERT INTO tags (name, number, id_release) VALUES (:name, :number, :id_releases)"
   UPDATE_TAG = "UPDATE tags SET number = :number WHERE id = :id;"
