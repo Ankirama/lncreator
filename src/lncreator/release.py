@@ -133,10 +133,10 @@ class Release(object):
     return tags_data
 
   def get_data_content(self):
-    logger.info("Trying to get metadata content for url [%s]..." % self._url)
     self._response = lncreator.utils.get_page_response(self._novelupdates_url)
     if not self._response:
       return False
+    logger.info("Trying to get metadata content for url [%s]..." % self._url)
     logger.debug("URL after redirection via response: [%s]" % self._response.url)
     self._url = self._response.url
     self._soup = lncreator.utils.get_bs_format(self._response)
