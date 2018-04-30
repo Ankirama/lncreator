@@ -24,7 +24,7 @@ def get_page_response(url):
       logger.warning("Bad URL format for [%s]" % url)
       return False
     logger.debug("Status code for url [%s]: %d" % (url, response.status_code))
-    logger.debug("[%s] content: %s" % (url, response.text))
+#    logger.debug("[%s] content: %s" % (url, response.text))
     if response.status_code != 200:
       logger.warning("Unable to process [%s] : Bad status code [%d]" % (url, response.status_code))
       return False

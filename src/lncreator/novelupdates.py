@@ -164,7 +164,7 @@ def get_ln_from_list(spamwriter, data):
     return True
 
 def get_list_from_range_ranking(url_ranking, page_start, page_end, csvname="ranking.csv"):
-    try:        
+    try:
         page_start = int(page_start)
         if page_start < 1:
             raise ValueError()

@@ -18,12 +18,12 @@ class Release(object):
   BASIC_STRUCT = ["group", "group_href", "title", "href"]
 
   def __init__(self, basic_data):
-    if not isinstance(basic_data, list):
-      raise TypeError("basic_data must be a list")
+    if not isinstance(basic_data, dict):
+      raise TypeError("basic_data must be a dictionnary")
     for key in self.BASIC_STRUCT:
       if not key in basic_data:
-        logger.warning("Unable to create release, the key [%s] is missing.\nData given:" % key)
-        logger.warning(basic_data)
+        logger.error("Unable to create release, the key [%s] is missing.\nData given:" % key)
+        logger.error(basic_data)
         raise TypeError("Your basic_data must contain [%s]" % key)
     self._group = {'name': basic_data["group"], 'url': basic_data['group_href']}
     self._title = basic_data['title']
@@ -34,6 +34,24 @@ class Release(object):
       tags[tag_to_add] += 1
     else:
       tags[tag_to_add] = 1
+
+  def add_in_database(self, database, id_lightnovel):
+    logger.debug("Adding a release in id_lightnovel [%d]..." % id_lightnovel)
+    logger.debug("Trying to add the group...")
+    if not self._group:
+      logger.error("Your group is empty!")
+      return False
+    id_group = database.add_group(self._group)
+    if not id_group:
+      return False
+    id_release = database.add_release({'name': self._title, 'url': self._url, 'id_group': id_group, 'id_lightnovel': id_lightnovel})
+    if not id_release:
+      return False
+    for key, value in self._tags.items():
+      id_tag = database.add_tag({'name': key, 'id_release': id_release, 'number': value})
+      if not id_tag:
+        logger.error("Unable to add tag [%s] in database" % key)
+    return True
 
   def get_soup_content(self):
     '''
@@ -51,7 +69,7 @@ class Release(object):
     '''
     logger.debug("Trying to get content position of [%s]" % self._url)
     if not p_tags:
-      logger.warning("Unable to find any <p> tags... Stopping here")
+      logger.error("Unable to find any <p> tags... Stopping here")
       return False
     i = 0
     index = -1
@@ -73,17 +91,17 @@ class Release(object):
     '''
     logger.debug("Trying to get parent data...")
     if not p_tag:
-      logger.warning("Unable to find your p_tag...")
+      logger.error("Unable to find your p_tag...")
       return False
     parent_tag = p_tag.parent
     if not parent_tag:
-      logger.warning("Unable to find a parent for your p_tag....")
+      logger.error("Unable to find a parent for your p_tag....")
       return False
-    parent_classes = None
-    parent_id = None
-    if "class" not in parent_tag:
+    parent_classes = []
+    parent_id = ""
+    if "class" in parent_tag:
       parent_classes = parent_tag["class"]
-    if "id" not in parent_tag:
+    if "id" in parent_tag:
       parent_id = parent_tag["id"]
     logger.debug("Parent found:")
     logger.debug("tag: %s" % parent_tag.name)
@@ -95,11 +113,11 @@ class Release(object):
   def _get_number_tags_content(self, p_tag):
     logger.debug("Trying to get number of each tags from content...")
     if not p_tag:
-      logger.warning("Unable to find your p_tag...")
+      logger.error("Unable to find your p_tag...")
       return False
-    tags = [p_tag] + p_tag.next_siblings
+    self._pseudo_content = [p_tag] + [tag for tag in p_tag.next_siblings]
     tags_data = dict()
-    for tag in tags:
+    for tag in self._pseudo_content:
       if tag.name != None:
         if isinstance(tag, NavigableString):
           self._add_tag(tags_data, "string")
@@ -129,7 +147,6 @@ class Release(object):
     if not parent:
       return False
     self._parent = parent
-    self._pseudo_content = [p_tag] + p_tag.next_siblings
     tags = self._get_number_tags_content(p_tag)
     if not tags:
       return False

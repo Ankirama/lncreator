@@ -9,12 +9,35 @@ import lncreator.utils
 class LightNovel(object):
   _releases = []
   _url = None
+  _name = None
+  _number_pages = 0
 
   def __init__(self, url):
     if not isinstance(url, str):
       raise TypeError("url must be a string")
     logger.info("Creating a new LN for url [%s]..." % url)
     self._url = url
+
+  def __str__(self):
+    pass
+#    print
+
+  def add_in_database(self, database):
+    logger.info("Trying to add lightnovel / releases in database...")
+    if not self._url or not self._name:
+      logger.error("Your name or url is empty, you can't add a lightnovel like that")
+      return False
+    if self._number_pages == 0:
+      logger.warning("Number of pages is 0 for [%s]" % self._name)
+    logger.debug("Number of releases: [%d] for [%s]" % (len(self._releases), self._name))
+    logger.debug("Adding the lightnovel [%s]..." % self._name)
+    id_lightnovel = database.add_lightnovel({'name': self._name, 'url': self._url, 'releases_number': len(self._releases), 'pages_number': self._number_pages})
+    if not id_lightnovel:
+      return False
+    for release in self._releases:
+      if not release.add_in_database(database, id_lightnovel):
+        logger.warning("Unable to add correctly release [%s] in database..." % release._name)
+    return True
 
   def number_pages_releases(self):
     '''
@@ -25,8 +48,8 @@ class LightNovel(object):
     The class used to find it in novelupdates is `digg_pagination`
     '''
     logger.debug("Getting number of pages from novelupdates [%s]..." % self._url)
-    if self._soup:
-      logger.warning("Unable to get soup...")
+    if not self._soup:
+      logger.error("Unable to get soup...")
       return False
     div = self._soup.find('div', class_='digg_pagination')
     if not div:
@@ -58,12 +81,12 @@ class LightNovel(object):
       if not group_data:
         raise exceptions.NovelUpdatesSoupError("Unable to find <a> tag in td_tags[1] (group data)... in novel updates [%s]" % page_url)
       basic_data['group'] = group_data.text
-      basic_data['group_href'] = lncreator.utils.format_link(group_data('href'))
+      basic_data['group_href'] = lncreator.utils.format_link(group_data.get('href'))
       logger.debug("Trying to create release url [%s]..." % basic_data['href'])
       try:
         release = Release(basic_data)
       except TypeError as e:
-        logger.warning(e)
+        logger.error(e)
         return False
       if not release.get_data_content():
         return False
@@ -93,13 +116,13 @@ class LightNovel(object):
       except exceptions.NovelUpdatesSoupError as e:
         raise exceptions.NovelUpdatesSoupError(e)
       if not release:
-        logger.warning("Unable to find data for releases [%s]" % page_url)
+        logger.error("Unable to find data for releases [%s]" % page_url)
         return False
       try:
-        self._releases.insert(0, release)
+        self._releases.append(release)
       except Exception as e:
-        logger.warning("Unable to push release...")
-        logger.warning(e)
+        logger.error("Unable to push release...")
+        logger.error(e)
 
   def get_releases(self):
     logger.debug("Getting releases for [%s]..." % self._url)
@@ -109,10 +132,13 @@ class LightNovel(object):
     self._soup = lncreator.utils.get_bs_format(self._response)
     if not self._soup:
       return False
+    self._name = self._soup.title.text
     number_pages = self.number_pages_releases()
     if not number_pages:
       return False
+    self._number_pages = number_pages
     self._releases = []
-    for page_id in range(1, number_pages):
+    for page_id in range(number_pages, 0, -1):
       page_url = "%s?pg=%d" % (self._url, page_id)
       self.get_releases_from_page(page_url)
+    return self._releases
