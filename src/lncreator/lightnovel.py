@@ -35,6 +35,7 @@ class LightNovel(object):
     if not id_lightnovel:
       return False
     for release in self._releases:
+      logger.debug("Adding release...")
       if not release.add_in_database(database, id_lightnovel):
         logger.warning("Unable to add correctly release [%s] in database..." % release._name)
     return True
@@ -116,8 +117,8 @@ class LightNovel(object):
       except exceptions.NovelUpdatesSoupError as e:
         raise exceptions.NovelUpdatesSoupError(e)
       if not release:
-        logger.error("Unable to find data for releases [%s]" % page_url)
-        return False
+        logger.error("Unable to find data for release in page [%s]" % page_url)
+        continue
       try:
         self._releases.append(release)
       except Exception as e:
