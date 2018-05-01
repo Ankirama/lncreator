@@ -24,7 +24,8 @@ class Database(object):
       url TEXT NOT NULL UNIQUE
       );"""
   CREATE_TAG_TABLE = """CREATE TABLE IF NOT EXISTS tags
-  (name TEXT NOT NULL,
+  (id INTEGER PRIMARY KEY AUTOINCREMENT,
+  name TEXT NOT NULL,
   number INTEGER DEFAULT 0,
   id_release INTEGER,
   FOREIGN KEY(id_release) REFERENCES releases(id)
@@ -44,7 +45,7 @@ class Database(object):
   INSERT_RELEASE = "INSERT INTO releases (name, url, id_group, id_lightnovel) VALUES (:name, :url, :id_group, :id_lightnovel);"
   INSERT_GROUP = "INSERT INTO groups (name, url) VALUES(:name, :url);"
   INSERT_LIGHTNOVEL = "INSERT INTO lightnovels (name, url, releases_number, pages_number) VALUES (:name, :url, :releases_number, :pages_number);"
-  INSERT_TAG = "INSERT INTO tags (name, number, id_release) VALUES (:name, :number, :id_releases)"
+  INSERT_TAG = "INSERT INTO tags (name, number, id_release) VALUES (:name, :number, :id_release)"
   UPDATE_TAG = "UPDATE tags SET number = :number WHERE id = :id;"
 
   def __init__(self, dbname):
@@ -144,7 +145,7 @@ class Database(object):
     if not "id_group" in data:
       logger.error("[Database]: The key [%s] is missing in data" % "id_group")
       return False
-    return self.add_entry_with_check(self.INSERT_RELEASE, data ['name', 'url', 'id_group', 'id_lightnovel'])
+    return self.add_entry_with_check(self.INSERT_RELEASE, data, ['name', 'url', 'id_group', 'id_lightnovel'])
 
   def add_lightnovel(self, data):
     return self.add_entry_with_check(self.INSERT_LIGHTNOVEL, data, ['name', 'url', 'releases_number', 'pages_number'])
