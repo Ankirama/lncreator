@@ -129,7 +129,7 @@ FORMATTER = logging.Formatter("\r[%(asctime)s] [%(levelname)s] %(message)s", "%H
 LOGGER_HANDLER.setFormatter(FORMATTER)
 LOGGER_HANDLER.level_map[logging.getLevelName("INFO")] = (None, "cyan", False)
 logger.addHandler(LOGGER_HANDLER)
-logger.setLevel(logging.DEBUG)
+logger.setLevel(logging.INFO)
 
 if __name__ == '__main__':
     logger.log(15, 'lncreator')
