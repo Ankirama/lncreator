@@ -28,7 +28,6 @@ def get_list_from_range_ranking(url_ranking="https://www.novelupdates.com/series
     if not tr_tags:
       logger.critical("Unable to find <tr> tag with class bdrank")
       return False
-    lightnovels = []
     for tr_tag in tr_tags:
       td_tags = tr_tag.find_all("td")
       if not td_tags:
@@ -49,8 +48,6 @@ def get_list_from_range_ranking(url_ranking="https://www.novelupdates.com/series
       except Exception as e:
         logger.error(e)
         continue
-      else:
-        lightnovels.append(lightnovel)
 
 def main():
   database = Database("sqlite.db")
