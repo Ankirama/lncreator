@@ -21,3 +21,5 @@
 - Don't forget chapter 0 / introduction
 - Check duplicate chapters !!!!! (https://www.novelupdates.com/series/reincarnated-as-a-villager-strongest-slow-life/?pg=3)
 - Manage differents balises (like <p>, <em>, <img>, <table>, ...)
+- Check if the ln already exists and add only new releases
+- Don't try to add useless data like trying to add X times the same group, ...
